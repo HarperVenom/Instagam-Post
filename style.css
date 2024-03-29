@@ -2,6 +2,10 @@
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+body {
+    height: 100vh;
+    display: none;
+}
 
 a {
     text-decoration: none;
@@ -20,6 +24,9 @@ a {
 .mar-sm {
     margin: 0.5rem;
 }
+.mar-bot-sm {
+    margin-bottom: 0.5rem;
+}
 .side-x-mar-sm {
     margin: 0 0.5rem;
 }
@@ -27,6 +34,9 @@ a {
     margin: 0.5rem 0;
 }
 
+.f-tiny {
+    font-size: 14px;
+}
 .f-sm {
     font-size: 16px;
 }
@@ -52,24 +62,27 @@ a {
 }
 .avatar {
     grid-area: img;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     object-fit: cover;
 }
 .bord-bot {
     border-bottom: 1px solid rgb(194, 194, 194);
+}
+.box-s {
+    box-sizing: border-box;
 }
 
 .post-container {
     position: relative;
     margin: 0 auto;
     width: 100%;
-    max-width: 500px;
+    height: 100%;
+    max-width: 400px;
 
     display: flex;
     flex-direction: column;
-
-
+    box-shadow: 0 0 10px -5px black;
 }
 .post-header {
     display: grid;
@@ -109,6 +122,7 @@ a {
         'message message message message'
         'comments comments comments comments';
         grid-template-columns: 1fr 1fr 1fr 10fr;
+
 }
 .post-like {
     grid-area: like;
@@ -133,12 +147,14 @@ a {
     grid-area: comments;
 }
 
-.post-comments {
+.post-comments-container {
     position: absolute;
     background-color: rgb(255, 255, 255);
-    width: 100%;
+    max-width: 100%;
     height: 75%;
+    max-height: 100%;
     bottom: 0;
+    transition: max-height 0.2s ease-out;
 
     display: flex;
     flex-direction: column;
@@ -161,6 +177,7 @@ a {
 
 .comments-section {
     overflow: auto;
+    padding-bottom: 2rem;
 }
 
 .comment {
@@ -168,11 +185,11 @@ a {
     grid-template-areas: 
         'img name like'
         'img comment like'
-        'img replies replies';
+        'img reply reply';
+    grid-template-columns: 1fr 10fr 1fr;
     margin: 1.5rem 0.5rem;
 }
 .comment-author-name {
-    font-size: 14px;
     grid-area: name;
 }
 .comment-message {
@@ -184,7 +201,48 @@ a {
     place-self: center;
     margin: 0 1rem;
 }
-.comment-replies {
-    font-size: 14px;
-    grid-area: replies;
+.comment-reply-button {
+    grid-area: reply;
+}
+
+.comment-replies-button {
+    display: flex;
+    align-items: center;
+    width: 85%;
+    margin-left: auto;
+}
+.comment-replies-button-line {
+    height: 2px;
+    width: 50px;
+    border-bottom: 1px inset rgb(154, 154, 154);
+    margin-right: 1rem;
+}
+
+.comment-reply {
+    margin-left: auto;
+    width: 85%;
+}
+.comment-replies-block.hidden {
+    display: none;
+}
+.comment-reply .comment-author-image {
+    width: 30px;
+    height: 30px;
+}
+
+.cover {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: background-color 0.4s ease;
+}
+.cover.hidden {
+    pointer-events: none;
+    background-color: rgba(255, 255, 255, 0);
+    transition: background-color 0.4s ease;
+}
+.post-comments-container.hidden {
+    max-height: 0px;
+    overflow: hidden;
 }
