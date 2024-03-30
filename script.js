@@ -1,6 +1,7 @@
 import { faker } from 'https://esm.sh/@faker-js/faker';
 
 const post = createPost();
+const likes = createLikesArray(10,50);
 const comments = createCommentsArray(5,15);
 comments.forEach(comment => {
     comment.addReplies(0, 3);
@@ -30,6 +31,8 @@ function createPerson() {
     return {
         username: faker.internet.userName().toLowerCase(),
         profileImage: faker.image.avatar(),
+        firstname: faker.person.firstName(),
+        lastname: faker.person.lastName()
     }
 }
 
@@ -42,16 +45,36 @@ const postContent = document.querySelector('.post-content');
 const postDescriptionUsername = document.getElementById('postDescriptionUsername');
 const postDescription = document.getElementById('postDescription');
 
-const postComments = document.querySelector('.post-comments');
-const postCommentContainer = document.querySelector('.post-comments-container');
-const backgroundCover = document.querySelector('.cover');
+const postLikesButton = document.querySelector('.post-liked-by');
+const postCommentsButton = document.querySelector('.post-comments');
 
+const postWrapper = document.querySelector('.post-wrapper');
+const postLikesContainer = document.querySelector('.post-likes-container');
+const postLikesSection = document.querySelector('.post-likes-section');
+const postLikesBackButton = document.querySelector('.post-likes-back-button');
+
+const backgroundCover = document.querySelector('.cover');
+const postCommentContainer = document.querySelector('.post-comments-container');
 const postCommentsSection = document.querySelector('.comments-section');
 
 setUpPost();
 
+//Open likes section
+postLikesButton.addEventListener('click', () => {
+    loadLikes();
+    postLikesContainer.classList.remove('hidden');
+    postWrapper.classList.add('shifted');
+
+    postLikesSection.scrollTop = 0;
+})
+//Close likes section
+postLikesBackButton.addEventListener('click', () => {
+    postLikesContainer.classList.add('hidden');
+    postWrapper.classList.remove('shifted');
+})
+
 //Open comments section
-postComments.addEventListener('click', () => {
+postCommentsButton.addEventListener('click', () => {
     loadComments();
     postCommentContainer.classList.remove('hidden');
     backgroundCover.classList.remove('hidden');
@@ -74,16 +97,59 @@ function setUpPost(){
     postDescriptionUsername.innerHTML = post.author.username;
     postDescription.innerText = post.description;
 
+    document.getElementById('firstLike').innerHTML = likes[0].username;
+    document.getElementById('allLikes').innerHTML = likes.length-1;
     document.getElementById('allComments').innerHTML = comments.length;
 
     document.body.style.display = 'block';
 }
 
-function loadComments() {
-    postCommentsSection.innerHTML = '';
-    comments.forEach(comment => {
-        setUpComment(comment, postCommentsSection);
+function createLikesArray(min, max) {
+    const likes = [];
+    const likesNumber = Math.round(min+Math.random()*(max-min));
+    for (let i = 0; i < likesNumber; i++) {
+        likes.push(createPerson());
+    }
+    return likes;
+}
+
+function loadLikes() {
+    if (postLikesSection.innerHTML.trim() != '') {
+        return;
+    }
+        likes.forEach(like => {
+        setUpLike(like, postLikesSection);
     })
+    document.querySelector('.post-likes-number').innerText = likes.length;
+}
+
+function setUpLike(like, parent) {
+    const likeElement = document.createElement('div');
+    const likeImg = document.createElement('img');
+    const likeUserName = document.createElement('div');
+    const likeName = document.createElement('div');
+    const followButton = document.createElement('button');
+
+    likeElement.classList.add('post-like', 'side-y-mar-mid');
+    likeImg.classList.add('avatar', 'circ', 'size-50');
+    likeImg.setAttribute('src', like.profileImage);
+    likeUserName.classList.add('username', 'bold', 'f-sm', 'no-wrap');
+    likeUserName.innerText = shortenName(like.username);
+    likeName.classList.add('name', 'gray-text', 'f-sm', 'no-wrap');
+    likeName.innerText = shortenName(like.firstname + ' ' + like.lastname);
+    followButton.classList.add('follow-button', 'f-sm', 'bold', 'point');
+    followButton.innerText = 'Follow';
+
+    likeElement.append(likeImg, likeUserName, likeName, followButton);
+    parent.appendChild(likeElement);
+
+    return likeElement;
+}
+function shortenName(name) {
+    if (name.length > 18) {
+        return name.slice(0,18) + '...';
+    }
+    return name;
 }
 
 function createCommentsArray(min, max) {
@@ -93,6 +159,13 @@ function createCommentsArray(min, max) {
         comments.push(createComment());
     }
     return comments;
+}
+
+function loadComments() {
+    postCommentsSection.innerHTML = '';
+    comments.forEach(comment => {
+        setUpComment(comment, postCommentsSection);
+    })
 }
 
 function setUpComment(comment, parent) {
@@ -109,19 +182,14 @@ function setUpComment(comment, parent) {
     repliesBlock.classList.add('comment-replies-block');
 
     commentElement.classList.add('comment');
-
     commentImg.classList.add('comment-author-image', 'avatar', 'circ', 'pad-sm');
     commentImg.setAttribute('src', comment.author.profileImage);
-
     commentName.classList.add('comment-author-name', 'bold', 'no-wrap', 'f-tiny');
     commentName.innerText = comment.author.username;
-
     commentMessage.classList.add('comment-message');
     commentMessage.innerText = comment.message;
-
     commentLike.classList.add('comment-like', 'side-x-mar-sm', 'point');
     commentLike.innerHTML = `<svg aria-label="Like" class="x1lliihq x1n2onr6 xyb1xck" fill="gray" height="24" role="img" viewBox="0 0 24 24" width="20"><title>Like</title><path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"></path></svg>`;
-    
     commentReply.classList.add('comment-reply-button', 'gray-text', 'bold', 'f-tiny');
     commentReply.innerText = 'Reply';
 

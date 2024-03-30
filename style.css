@@ -33,6 +33,9 @@ a {
 .side-y-mar-sm {
     margin: 0.5rem 0;
 }
+.side-y-mar-mid {
+    margin: 1rem 0;
+}
 
 .f-tiny {
     font-size: 14px;
@@ -43,8 +46,12 @@ a {
 .f-mid {
     font-size: 18px;
 }
+
 .bold {
     font-weight: 600;
+}
+.fw-7 {
+    font-weight: 700;
 }
 .circ {
     border-radius: 50%;
@@ -66,6 +73,10 @@ a {
     height: 40px;
     object-fit: cover;
 }
+.size-50 {
+    width: 50px;
+    height: 50px;
+}
 .bord-bot {
     border-bottom: 1px solid rgb(194, 194, 194);
 }
@@ -73,16 +84,29 @@ a {
     box-sizing: border-box;
 }
 
+.height-60 {
+    height: 60%;
+}
 .post-container {
     position: relative;
     margin: 0 auto;
     width: 100%;
     height: 100%;
     max-width: 400px;
+    overflow-x: hidden;
 
     display: flex;
     flex-direction: column;
     box-shadow: 0 0 10px -5px black;
+}
+.post-wrapper.shifted {
+    transform: translateX(-100px);
+}
+.post-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease;
 }
 .post-header {
     display: grid;
@@ -124,7 +148,7 @@ a {
         grid-template-columns: 1fr 1fr 1fr 10fr;
 
 }
-.post-like {
+.post-like-button {
     grid-area: like;
 }
 .post-comment {
@@ -147,6 +171,118 @@ a {
     grid-area: comments;
 }
 
+.cover {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: background-color 0.4s ease;
+}
+.cover.hidden {
+    pointer-events: none;
+    background-color: rgba(255, 255, 255, 0);
+    transition: background-color 0.4s ease;
+}
+
+.post-likes-container.hidden {
+    transform: translateX(calc(100% + 1px));
+    overflow: hidden;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.post-likes-container {
+    position: absolute;
+    background-color: rgb(255, 255, 255);
+    width: 100%;
+    height: 100%;
+    right: 0;
+    transition: transform 0.2s ease-out, padding 0.2s ease;
+
+    display: flex;
+    flex-direction: column;
+}
+.post-likes-heading-container {
+    display: flex;
+}
+.post-likes-back-button {
+    box-sizing: border-box;
+    padding-top: 0.1rem;
+    width: 23px;
+    margin-right: 1.5rem;
+    place-self: center;
+}
+.post-likes-search {
+    display: flex;
+    align-items: center;
+    padding: 0.2rem 0.5rem;
+    margin: 1rem 0;
+    border-radius: 10px;
+    border: none;
+    background-color: rgb(236, 236, 236);
+    height: 1.8rem;
+}
+.post-likes-search input {
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    flex-grow: 1;
+    margin-right: 0.5rem;
+}
+.post-likes-liked-by-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid rgb(216, 216, 216);
+}
+.post-likes-section {
+    display: flex;
+    flex-direction: column;
+
+    overflow: auto;
+    -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;
+}
+.post-likes-section::-webkit-scrollbar {
+    display: none;
+}
+.post-like {
+    display: grid;
+    grid-template-areas: 
+        'img username follow'
+        'img name follow';
+    place-items: center;
+    grid-template-columns: 1fr 10fr 7fr;
+
+    margin: 0.5rem 0;
+}
+.post-like .avatar {
+    grid-area: img;
+    background-color: black;
+    margin-right: 1rem;
+}
+.post-like .username {
+    grid-area: username;
+    place-self: end start;
+}
+.post-like .name {
+    grid-area: name;
+    place-self: start;
+}
+.post-like .follow-button {
+    grid-area: follow;
+    height: 60%;
+    width: 100%;
+    background-color: rgb(0, 140, 255);
+    border: none;
+    border-radius: 8px;
+    color: white;
+}
+
+.post-comments-container.hidden {
+    max-height: 0px;
+    overflow: hidden;
+}
 .post-comments-container {
     position: absolute;
     background-color: rgb(255, 255, 255);
@@ -228,21 +364,4 @@ a {
 .comment-reply .comment-author-image {
     width: 30px;
     height: 30px;
-}
-
-.cover {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    transition: background-color 0.4s ease;
-}
-.cover.hidden {
-    pointer-events: none;
-    background-color: rgba(255, 255, 255, 0);
-    transition: background-color 0.4s ease;
-}
-.post-comments-container.hidden {
-    max-height: 0px;
-    overflow: hidden;
 }
