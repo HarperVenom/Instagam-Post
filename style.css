@@ -276,7 +276,7 @@ a {
 
     overflow: auto;
     -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;
+    scrollbar-width: none;
 }
 .post-likes-section::-webkit-scrollbar {
     display: none;
@@ -316,9 +316,9 @@ a {
 
 .post-comments-container.hidden {
     max-height: 0px;
-    overflow: hidden;
 }
 .post-comments-container {
+    overflow: hidden;
     position: absolute;
     background-color: rgb(255, 255, 255);
     max-width: 100%;
@@ -350,6 +350,7 @@ a {
     overflow: auto;
     padding-bottom: 2rem;
 }
+
 
 .comment {
     display: grid;
